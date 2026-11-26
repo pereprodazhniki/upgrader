@@ -675,9 +675,27 @@ function animatePointer(totalDeg, duration) {
   return new Promise((resolve) => {
     const start = performance.now();
     let lastTick = -1;
+    let raf = 0;
+    let safety = 0;
+    let done = false;
+
+    const finish = () => {
+      if (done) return;
+      done = true;
+      if (raf) cancelAnimationFrame(raf);
+      clearTimeout(safety);
+      el.wheelPointer.style.transform = 'rotate(' + totalDeg + 'deg)';
+      resolve();
+    };
+
+    // Страховка: если requestAnimationFrame приостановлен (фоновая вкладка),
+    // раунд всё равно завершится и исход будет засчитан.
+    safety = setTimeout(finish, duration + 800);
+
     el.wheelPointer.style.transform = 'rotate(0deg)';
 
     const step = (now) => {
+      if (done) return;
       const p = clamp((now - start) / duration, 0, 1);
       const e = 1 - Math.pow(1 - p, 4);
       const angle = totalDeg * e;
@@ -689,10 +707,10 @@ function animatePointer(totalDeg, duration) {
         if (p < 0.985) beep(1000 - p * 380, 0.018, 'square', 0.011);
       }
 
-      if (p < 1) requestAnimationFrame(step);
-      else resolve();
+      if (p < 1) raf = requestAnimationFrame(step);
+      else finish();
     };
-    requestAnimationFrame(step);
+    raf = requestAnimationFrame(step);
   });
 }
 
@@ -722,6 +740,7 @@ async function doUpgrade() {
   el.wheelLabel.className = 'wheel-label';
   el.wheelSub.textContent = '×' + mult;
 
+  let finished = false;
   try {
     const r = await roll();
     const win = r * 100 < chance;
@@ -770,13 +789,14 @@ async function doUpgrade() {
     }
 
     await wait(reduceMotion ? 200 : 900);
+    finished = true;
   } catch (err) {
     console.error(err);
     if (state.pending) settlePending();
     toast('Ошибка раунда. Попробуй ещё раз');
     renderAll();
   } finally {
-    resetWheel();
+    if (!finished) resetWheel();
     spinning = false;
     setBusy(false);
     updateArena();
