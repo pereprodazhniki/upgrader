@@ -2,128 +2,250 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="UPGRADER — демо-сайт апгрейда скинов. Виртуальная валюта, без реальных денег.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05060c">
+<meta name="description" content="UPGRADER — демо-апгрейдер скинов: колесо апгрейда, кейсы, магазин и provably fair. Виртуальная валюта.">
 <title>UPGRADER — апгрейд скинов</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔺</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="bg-glow"></div>
+
+<div class="bg">
+  <span class="blob b1"></span>
+  <span class="blob b2"></span>
+  <span class="blob b3"></span>
+  <span class="grid"></span>
+</div>
 
 <header class="topbar">
-  <div class="brand">
-    <div class="brand-mark">▲</div>
-    <div class="brand-text">UPGRADER<span>demo</span></div>
-  </div>
+  <a class="brand" href="#" data-view="play" aria-label="UPGRADER">
+    <span class="brand-mark">▲</span>
+    <span class="brand-text">UPGRADER<em>demo</em></span>
+  </a>
 
-  <nav class="tabs" id="tabs">
-    <button class="tab active" data-view="play">Играть</button>
+  <nav class="tabs" data-nav>
+    <button class="tab active" data-view="play">Апгрейд</button>
+    <button class="tab" data-view="cases">Кейсы</button>
     <button class="tab" data-view="shop">Магазин</button>
-    <button class="tab" data-view="history">История</button>
+    <button class="tab" data-view="profile">Профиль</button>
   </nav>
 
   <div class="top-right">
-    <button id="bonusBtn" class="bonus-btn" title="Ежедневный бонус">🎁 <span>Бонус</span></button>
+    <button id="bonusBtn" class="bonus-btn" title="Ежедневный бонус">🎁<span>Бонус</span></button>
     <div class="balance-pill" title="Баланс">
       <span class="coin">◈</span><b id="balance">0</b>
     </div>
-    <div class="level-pill" id="levelPill">LVL 1</div>
-    <button id="soundBtn" class="icon-btn" title="Звук">🔊</button>
+    <div class="level-pill" id="levelPill" title="Уровень">LVL 1</div>
+    <button id="soundBtn" class="icon-btn" title="Звук" aria-label="Звук">🔊</button>
   </div>
 </header>
 
 <main>
-  <!-- ИГРА -->
+
+  <!-- ================= АПГРЕЙД ================= -->
   <section class="view active" id="view-play">
     <div class="play-grid">
 
-      <aside class="panel inventory-panel">
+      <aside class="panel inv-panel">
         <div class="panel-head">
           <h2>Инвентарь</h2>
-          <span id="invCount" class="muted">0</span>
+          <span class="chip" id="invCount">0</span>
         </div>
-        <div id="inventory" class="inv-grid"></div>
-        <div class="inv-footer">
-          <div class="stake-line">Ставка: <b id="stakeTotal">0</b> ◈</div>
-          <div class="inv-btns">
-            <button id="sellBtn" class="ghost-btn" title="Продать выбранное за 85% цены">Продать</button>
-            <button id="clearStake" class="ghost-btn">Сброс</button>
+
+        <div class="inv-grid" id="inventory"></div>
+
+        <div class="bet-box">
+          <div class="bet-label">Монеты в ставку</div>
+          <div class="bet-input">
+            <button id="betMinus" class="step-btn" aria-label="Меньше">−</button>
+            <input id="coinBet" type="number" min="0" step="10" value="0" inputmode="numeric" aria-label="Ставка монетами">
+            <button id="betPlus" class="step-btn" aria-label="Больше">+</button>
           </div>
+          <div class="quick-bets" id="quickBets">
+            <button data-bet="100">100</button>
+            <button data-bet="500">500</button>
+            <button data-bet="1000">1000</button>
+            <button data-bet="max">MAX</button>
+          </div>
+        </div>
+
+        <div class="inv-actions">
+          <button id="sellBtn" class="ghost" title="Продать выбранное за 85%">Продать</button>
+          <button id="clearStake" class="ghost">Сброс</button>
         </div>
       </aside>
 
       <section class="panel arena">
         <div class="arena-top">
-          <div class="chance-badge">ШАНС <b id="chanceVal">47.5%</b></div>
-          <div class="mult-badge">×<b id="multVal">2</b></div>
+          <div class="badge chance">ШАНС <b id="chanceVal">47.5%</b></div>
+          <div class="badge mult">МНОЖИТЕЛЬ <b>×<span id="multVal">2</span></b></div>
         </div>
 
-        <div class="wheel" id="wheel">
+        <div class="wheel">
+          <div class="wheel-ticks"></div>
           <div class="wheel-ring" id="wheelRing"></div>
+          <div class="wheel-shine"></div>
           <div class="wheel-pointer" id="wheelPointer">
-            <div class="pointer-needle"></div>
-            <div class="pointer-head"></div>
+            <svg class="needle" viewBox="0 0 44 150" aria-hidden="true">
+              <defs>
+                <linearGradient id="needleGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#ffffff"/>
+                  <stop offset=".42" stop-color="#c4b5fd"/>
+                  <stop offset=".75" stop-color="#8b5cf6"/>
+                  <stop offset="1" stop-color="#22d3ee"/>
+                </linearGradient>
+                <filter id="needleGlow" x="-80%" y="-30%" width="260%" height="180%">
+                  <feGaussianBlur stdDeviation="3.2" result="b"/>
+                  <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <path d="M22 3 L35 42 L22 33 L9 42 Z" fill="url(#needleGrad)" filter="url(#needleGlow)"/>
+              <rect x="19.5" y="36" width="5" height="100" rx="2.5" fill="url(#needleGrad)" opacity=".9" filter="url(#needleGlow)"/>
+              <circle cx="22" cy="141" r="6.5" fill="#22d3ee" filter="url(#needleGlow)"/>
+              <circle cx="22" cy="141" r="2.6" fill="#ffffff"/>
+            </svg>
           </div>
           <div class="wheel-center">
-            <div id="wheelLabel" class="wheel-label">Готов?</div>
-            <div id="wheelSub" class="wheel-sub">Выбери множитель</div>
+            <div class="wheel-label" id="wheelLabel">ГОТОВ?</div>
+            <div class="wheel-sub" id="wheelSub">Выбери множитель</div>
           </div>
         </div>
 
         <div class="mult-row" id="multRow"></div>
 
+        <div class="stake-summary">
+          <span>Ставка <b id="stakeTotal">0</b> ◈</span>
+          <span class="arrow">→</span>
+          <span>Выигрыш <b id="potential">0</b> ◈</span>
+        </div>
+
         <button id="upgradeBtn" class="upgrade-btn" disabled>АПГРЕЙД</button>
-        <div class="arena-hint" id="arenaHint">Выбери предметы в инвентаре</div>
+        <div class="arena-hint" id="arenaHint">Выбери предметы или добавь монеты</div>
       </section>
 
-      <aside class="panel feed-panel">
+      <aside class="panel side">
         <div class="panel-head">
           <h2>Live</h2>
           <span class="live-dot" title="онлайн"></span>
         </div>
-        <div id="feed" class="feed"></div>
+        <div class="feed" id="feed"></div>
+
+        <details class="fair">
+          <summary>Provably Fair <span class="tag">demo</span></summary>
+          <div class="fair-body">
+            <label class="fair-field">Client seed
+              <input id="clientSeed" maxlength="24" autocomplete="off" spellcheck="false">
+            </label>
+            <div class="fair-line"><span>Nonce</span><b id="fairNonce">0</b></div>
+            <div class="fair-line"><span>Server hash</span><code id="serverHash">…</code></div>
+            <div class="fair-line" id="seedRow" hidden><span>Server seed</span><code id="serverSeed">…</code></div>
+            <div class="fair-actions">
+              <button id="revealSeed" class="ghost">Показать seed</button>
+              <button id="newSeed" class="ghost">Новый seed</button>
+            </div>
+            <p class="fair-note">Исход считается из SHA-256(seed | client | nonce) <b>до</b> анимации и сразу фиксируется. Перезагрузка страницы не меняет результат.</p>
+          </div>
+        </details>
       </aside>
 
     </div>
   </section>
 
-  <!-- МАГАЗИН -->
+  <!-- ================= КЕЙСЫ ================= -->
+  <section class="view" id="view-cases">
+    <div class="page-head">
+      <h1>Кейсы</h1>
+      <p>Открывай кейсы и забирай скины в инвентарь</p>
+    </div>
+    <div class="case-grid" id="caseGrid"></div>
+  </section>
+
+  <!-- ================= МАГАЗИН ================= -->
   <section class="view" id="view-shop">
-    <div class="panel shop-panel">
-      <div class="panel-head">
-        <h2>Магазин</h2>
-        <span class="muted">виртуальные предметы</span>
+    <div class="page-head">
+      <h1>Магазин</h1>
+      <p>Покупай предметы за виртуальные монеты</p>
+    </div>
+    <div class="filters" id="shopFilters">
+      <button class="chip active" data-filter="all">Все</button>
+      <button class="chip" data-filter="guns">Оружие</button>
+      <button class="chip" data-filter="knives">Ножи</button>
+    </div>
+    <div class="shop-grid" id="shopGrid"></div>
+  </section>
+
+  <!-- ================= ПРОФИЛЬ ================= -->
+  <section class="view" id="view-profile">
+    <div class="profile-head panel">
+      <div class="avatar" id="avatar">U</div>
+      <div class="profile-id">
+        <h2>Игрок</h2>
+        <div class="lvl-line"><span id="pLevel">LVL 1</span><span id="pXp">0 / 100 XP</span></div>
+        <div class="xp-bar"><i id="pXpFill"></i></div>
       </div>
-      <div id="shopGrid" class="shop-grid"></div>
+      <button id="resetBtn" class="ghost">Сбросить прогресс</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat"><span>Баланс</span><b id="pBalance">0 ◈</b></div>
+      <div class="stat"><span>Апгрейдов</span><b id="pUpgrades">0</b></div>
+      <div class="stat"><span>Винрейт</span><b id="pWinrate">0%</b></div>
+      <div class="stat"><span>Всего ставок</span><b id="pWagered">0 ◈</b></div>
+      <div class="stat"><span>Выиграно</span><b id="pWon">0 ◈</b></div>
+      <div class="stat"><span>Лучший выигрыш</span><b id="pBest">0 ◈</b></div>
+    </div>
+
+    <div class="panel chart-panel">
+      <div class="panel-head"><h2>Динамика баланса</h2><span class="muted">последние транзакции</span></div>
+      <canvas id="chart" height="180"></canvas>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Достижения</h2><span class="chip" id="achCount">0/0</span></div>
+      <div class="ach-grid" id="achievements"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>История</h2><span class="muted">апгрейды и кейсы</span></div>
+      <div class="history-list" id="history"></div>
     </div>
   </section>
 
-  <!-- ИСТОРИЯ -->
-  <section class="view" id="view-history">
-    <div class="panel stats-panel">
-      <div class="stat"><span>Уровень</span><b id="statLevel">1</b></div>
-      <div class="stat"><span>Опыт</span><b id="statXp">0 / 100</b></div>
-      <div class="stat"><span>Всего ставок</span><b id="statWagered">0</b></div>
-      <div class="stat"><span>Выиграно</span><b id="statWon">0</b></div>
-      <div class="stat"><span>Лучший выигрыш</span><b id="statBest">0</b></div>
-    </div>
-
-    <div class="panel history-panel">
-      <div class="panel-head">
-        <h2>История апгрейдов</h2>
-        <button id="resetBtn" class="ghost-btn">Сбросить прогресс</button>
-      </div>
-      <div id="history" class="history-list"></div>
-    </div>
-  </section>
 </main>
 
 <footer class="footer">
   Демо-проект. Виртуальная валюта, реальных денег и выплат нет. 18+
 </footer>
 
-<div id="toast" class="toast"></div>
+<!-- мобильная навигация -->
+<nav class="bottom-nav" data-nav>
+  <button class="active" data-view="play"><span>🎡</span>Апгрейд</button>
+  <button data-view="cases"><span>📦</span>Кейсы</button>
+  <button data-view="shop"><span>🛒</span>Магазин</button>
+  <button data-view="profile"><span>👤</span>Профиль</button>
+</nav>
+
+<!-- модалка кейса -->
+<div class="modal" id="caseModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="caseTitle" tabindex="-1">
+    <button class="modal-close" id="caseClose" aria-label="Закрыть">✕</button>
+    <h3 id="caseTitle">Кейс</h3>
+    <div class="reel-wrap" id="reelWrap">
+      <div class="reel-marker"></div>
+      <div class="reel" id="caseReel"></div>
+    </div>
+    <div class="case-result" id="caseResult"></div>
+    <button class="upgrade-btn" id="caseTake" disabled>Забрать</button>
+  </div>
+</div>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div id="toast" class="toast" role="status"></div>
+
 <script src="app.js"></script>
 </body>
 </html>
