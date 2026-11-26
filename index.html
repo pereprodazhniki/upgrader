@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="UPGRADER — демо-сайт апгрейда скинов. Виртуальная валюта, без реальных денег.">
+<title>UPGRADER — апгрейд скинов</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔺</text></svg>">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">▲</div>
+    <div class="brand-text">UPGRADER<span>demo</span></div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-view="play">Играть</button>
+    <button class="tab" data-view="shop">Магазин</button>
+    <button class="tab" data-view="history">История</button>
+  </nav>
+
+  <div class="top-right">
+    <button id="bonusBtn" class="bonus-btn" title="Ежедневный бонус">🎁 <span>Бонус</span></button>
+    <div class="balance-pill" title="Баланс">
+      <span class="coin">◈</span><b id="balance">0</b>
+    </div>
+    <div class="level-pill" id="levelPill">LVL 1</div>
+    <button id="soundBtn" class="icon-btn" title="Звук">🔊</button>
+  </div>
+</header>
+
+<main>
+  <!-- ИГРА -->
+  <section class="view active" id="view-play">
+    <div class="play-grid">
+
+      <aside class="panel inventory-panel">
+        <div class="panel-head">
+          <h2>Инвентарь</h2>
+          <span id="invCount" class="muted">0</span>
+        </div>
+        <div id="inventory" class="inv-grid"></div>
+        <div class="inv-footer">
+          <div class="stake-line">Ставка: <b id="stakeTotal">0</b> ◈</div>
+          <div class="inv-btns">
+            <button id="sellBtn" class="ghost-btn" title="Продать выбранное за 85% цены">Продать</button>
+            <button id="clearStake" class="ghost-btn">Сброс</button>
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel arena">
+        <div class="arena-top">
+          <div class="chance-badge">ШАНС <b id="chanceVal">47.5%</b></div>
+          <div class="mult-badge">×<b id="multVal">2</b></div>
+        </div>
+
+        <div class="wheel" id="wheel">
+          <div class="wheel-ring" id="wheelRing"></div>
+          <div class="wheel-pointer" id="wheelPointer">
+            <div class="pointer-needle"></div>
+            <div class="pointer-head"></div>
+          </div>
+          <div class="wheel-center">
+            <div id="wheelLabel" class="wheel-label">Готов?</div>
+            <div id="wheelSub" class="wheel-sub">Выбери множитель</div>
+          </div>
+        </div>
+
+        <div class="mult-row" id="multRow"></div>
+
+        <button id="upgradeBtn" class="upgrade-btn" disabled>АПГРЕЙД</button>
+        <div class="arena-hint" id="arenaHint">Выбери предметы в инвентаре</div>
+      </section>
+
+      <aside class="panel feed-panel">
+        <div class="panel-head">
+          <h2>Live</h2>
+          <span class="live-dot" title="онлайн"></span>
+        </div>
+        <div id="feed" class="feed"></div>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- МАГАЗИН -->
+  <section class="view" id="view-shop">
+    <div class="panel shop-panel">
+      <div class="panel-head">
+        <h2>Магазин</h2>
+        <span class="muted">виртуальные предметы</span>
+      </div>
+      <div id="shopGrid" class="shop-grid"></div>
+    </div>
+  </section>
+
+  <!-- ИСТОРИЯ -->
+  <section class="view" id="view-history">
+    <div class="panel stats-panel">
+      <div class="stat"><span>Уровень</span><b id="statLevel">1</b></div>
+      <div class="stat"><span>Опыт</span><b id="statXp">0 / 100</b></div>
+      <div class="stat"><span>Всего ставок</span><b id="statWagered">0</b></div>
+      <div class="stat"><span>Выиграно</span><b id="statWon">0</b></div>
+      <div class="stat"><span>Лучший выигрыш</span><b id="statBest">0</b></div>
+    </div>
+
+    <div class="panel history-panel">
+      <div class="panel-head">
+        <h2>История апгрейдов</h2>
+        <button id="resetBtn" class="ghost-btn">Сбросить прогресс</button>
+      </div>
+      <div id="history" class="history-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  Демо-проект. Виртуальная валюта, реальных денег и выплат нет. 18+
+</footer>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
