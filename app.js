@@ -10,7 +10,13 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const rand = (a, b) => a + Math.random() * (b - a);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-const nextFrame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+const nextFrame = () => new Promise((r) => {
+  let done = false;
+  const finish = () => { if (!done) { done = true; r(); } };
+  requestAnimationFrame(() => requestAnimationFrame(finish));
+  // rAF может быть приостановлен в фоновой вкладке — не даём процессу зависнуть
+  setTimeout(finish, 250);
+});
 const fmt = (n) => Math.round(Number(n) || 0).toLocaleString('ru-RU');
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'i' + Math.random().toString(36).slice(2) + Date.now().toString(36));
@@ -476,6 +482,13 @@ function animateBalance(from, to) {
     else { shownBalance = to; el.balance.textContent = fmt(to); }
   };
   requestAnimationFrame(step);
+  // страховка на случай приостановленного rAF в фоновой вкладке
+  setTimeout(() => {
+    if (token !== balanceToken) return;
+    balanceToken++;
+    shownBalance = to;
+    el.balance.textContent = fmt(to);
+  }, dur + 300);
 }
 
 function renderHeader(animate) {
