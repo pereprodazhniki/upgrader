@@ -126,6 +126,7 @@ function defaultState() {
     balanceHistory: [{ t: Date.now(), v: 2500 }],
     sound: true,
     lastBonus: 0,
+    mult: 2,
     serverSeed: randomHex(16),
     clientSeed: 'player-' + randomHex(3),
     nonce: 0,
@@ -493,13 +494,13 @@ function itemCardHTML(item, isSel) {
   const r = rarityOf(c);
   return '<button class="item-card' + (isSel ? ' selected' : '') + '" data-uid="' + item.uid + '"' +
     ' style="--c1:' + c.c1 + ';--c2:' + c.c2 + ';--rar:' + r.color + '" title="' + esc(c.name) + '">' +
-    '<span class="item-glow"></span>' +
-    '<span class="item-art">' + c.emoji + '</span>' +
+    '<span class="item-glow" aria-hidden="true"></span>' +
+    '<span class="item-art" aria-hidden="true">' + c.emoji + '</span>' +
     '<span class="item-emoji">' + c.emoji + '</span>' +
     '<span class="item-name">' + esc(c.name) + '</span>' +
     '<span class="item-price">◈ ' + fmt(c.price) + '</span>' +
-    '<span class="item-rar"></span>' +
-    '<span class="item-check">✓</span>' +
+    '<span class="item-rar" aria-hidden="true"></span>' +
+    '<span class="item-check" aria-hidden="true">✓</span>' +
     '</button>';
 }
 
@@ -527,13 +528,13 @@ function renderShop() {
     const cant = state.balance < c.price ? ' cant' : '';
     return '<button class="shop-card' + cant + '" data-buy="' + c.id + '"' +
       ' style="--c1:' + c.c1 + ';--c2:' + c.c2 + ';--rar:' + r.color + '" title="' + esc(c.name) + '">' +
-      '<span class="item-glow"></span>' +
-      '<span class="item-art">' + c.emoji + '</span>' +
+      '<span class="item-glow" aria-hidden="true"></span>' +
+      '<span class="item-art" aria-hidden="true">' + c.emoji + '</span>' +
       '<span class="item-emoji">' + c.emoji + '</span>' +
       '<span class="item-name">' + esc(c.name) + '</span>' +
       '<span class="item-price">◈ ' + fmt(c.price) + '</span>' +
       '<span class="buy-tag">' + (state.balance >= c.price ? 'Купить' : 'Не хватает') + '</span>' +
-      '<span class="item-rar"></span>' +
+      '<span class="item-rar" aria-hidden="true"></span>' +
       '</button>';
   }).join('');
 }
@@ -631,7 +632,7 @@ function renderAll(opts = {}) {
 function updateArena() {
   const bet = Math.min(betValue(), Math.max(0, state.balance));
   const stake = itemsValue(selectedItems()) + bet;
-  const mult = state.mult;
+  const mult = MULTIPLIERS.includes(state.mult) ? state.mult : 2;
   const chance = chanceOf(mult);
   const deg = chance * 3.6;
 
@@ -707,7 +708,7 @@ async function doUpgrade() {
     return;
   }
 
-  const mult = state.mult;
+  const mult = MULTIPLIERS.includes(state.mult) ? state.mult : 2;
   const chance = chanceOf(mult);
   const itemUids = items.map((i) => i.uid);
   const itemNames = items.map((i) => {
@@ -797,12 +798,12 @@ function buildReel(box, winnerId) {
     if (!c) return '';
     const r = rarityOf(c);
     return '<div class="case-item" style="--c1:' + c.c1 + ';--c2:' + c.c2 + ';--rar:' + r.color + '">' +
-      '<span class="item-glow"></span>' +
-      '<span class="item-art">' + c.emoji + '</span>' +
+      '<span class="item-glow" aria-hidden="true"></span>' +
+      '<span class="item-art" aria-hidden="true">' + c.emoji + '</span>' +
       '<span class="item-emoji">' + c.emoji + '</span>' +
       '<span class="item-name">' + esc(c.name) + '</span>' +
       '<span class="item-price">◈ ' + fmt(c.price) + '</span>' +
-      '<span class="item-rar"></span>' +
+      '<span class="item-rar" aria-hidden="true"></span>' +
       '</div>';
   }).join('');
 }
