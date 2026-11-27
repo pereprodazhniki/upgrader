@@ -60,11 +60,12 @@ const CATALOG = [
   { id: 'awp-medusa',      name: 'AWP | Medusa',             price: 950,  rarity: 'covert',     emoji: '🐙', c1: '#eb4b4b', c2: '#0b3a2e' },
   { id: 'karambit-fade',   name: '★ Karambit | Fade',        price: 1400, rarity: 'knife',      emoji: '🌗', c1: '#ffcf6b', c2: '#4a1a3d' },
   { id: 'butterfly-doppler', name: '★ Butterfly | Doppler',  price: 1600, rarity: 'knife',      emoji: '🦋', c1: '#ffcf6b', c2: '#24104a' },
+  { id: 'awp-gungnir',     name: 'AWP | Gungnir',            price: 3000, rarity: 'covert',     emoji: '🌌', c1: '#eb4b4b', c2: '#0a1a3a' },
 ];
 
 const CASES = [
   {
-    id: 'starter', name: 'Стартовый', price: 150, emoji: '📦', c1: '#22d3ee', c2: '#0e4b5c',
+    id: 'starter', name: 'Стартовый', price: 120, emoji: '📦', c1: '#22d3ee', c2: '#0e4b5c',
     pool: [
       { id: 'famas-roll', w: 30 }, { id: 'mp9-starlight', w: 24 }, { id: 'glock-fade', w: 15 },
       { id: 'ak-redline', w: 12 }, { id: 'sg553-integrale', w: 8 }, { id: 'usp-kill', w: 5 },
@@ -73,7 +74,7 @@ const CASES = [
     ],
   },
   {
-    id: 'premium', name: 'Премиум', price: 600, emoji: '🎁', c1: '#8b5cf6', c2: '#2a1155',
+    id: 'premium', name: 'Премиум', price: 320, emoji: '🎁', c1: '#8b5cf6', c2: '#2a1155',
     pool: [
       { id: 'ak-redline', w: 20 }, { id: 'sg553-integrale', w: 15 }, { id: 'glock-fade', w: 15 },
       { id: 'usp-kill', w: 15 }, { id: 'awp-asiimov', w: 12 }, { id: 'deagle-blaze', w: 10 },
@@ -82,7 +83,7 @@ const CASES = [
     ],
   },
   {
-    id: 'knife', name: 'Ножевой', price: 2000, emoji: '🗡️', c1: '#ffcf6b', c2: '#4a2a05',
+    id: 'knife', name: 'Ножевой', price: 900, emoji: '🗡️', c1: '#ffcf6b', c2: '#4a2a05',
     pool: [
       { id: 'm4-neon', w: 20 }, { id: 'm4a1-printstream', w: 18 }, { id: 'deagle-blaze', w: 15 },
       { id: 'awp-asiimov', w: 15 }, { id: 'awp-dragon', w: 10 }, { id: 'knife-doppler', w: 10 },
@@ -90,7 +91,7 @@ const CASES = [
     ],
   },
   {
-    id: 'budget', name: 'Бюджетный', price: 75, emoji: '🧰', c1: '#34e59a', c2: '#0b3a2a',
+    id: 'budget', name: 'Бюджетный', price: 85, emoji: '🧰', c1: '#34e59a', c2: '#0b3a2a',
     pool: [
       { id: 'famas-roll', w: 34 }, { id: 'mp9-starlight', w: 28 }, { id: 'glock-water', w: 16 },
       { id: 'ak-redline', w: 10 }, { id: 'sg553-integrale', w: 6 }, { id: 'glock-fade', w: 4 },
@@ -98,12 +99,14 @@ const CASES = [
     ],
   },
   {
-    id: 'elite', name: 'Элитный', price: 5000, emoji: '💎', c1: '#d32ce6', c2: '#2a0a3d',
+    id: 'elite', name: 'Элитный', price: 1500, emoji: '💎', c1: '#d32ce6', c2: '#2a0a3d',
     pool: [
-      { id: 'm4-neon', w: 20 }, { id: 'ak-fire', w: 16 }, { id: 'awp-asiimov', w: 14 },
-      { id: 'm4a1-printstream', w: 12 }, { id: 'm4-howl', w: 10 }, { id: 'awp-medusa', w: 8 },
-      { id: 'awp-dragon', w: 6 }, { id: 'knife-doppler', w: 6 }, { id: 'talon-marble', w: 3.6 },
-      { id: 'butterfly-doppler', w: 2.4 }, { id: 'karambit-fade', w: 1.6 }, { id: 'butterfly', w: 0.4 },
+      { id: 'awp-gungnir', w: 10 }, { id: 'karambit-fade', w: 10 },
+      { id: 'butterfly-doppler', w: 10 }, { id: 'awp-dragon', w: 10 },
+      { id: 'talon-marble', w: 10 }, { id: 'awp-medusa', w: 10 },
+      { id: 'knife-doppler', w: 10 }, { id: 'm4-howl', w: 10 },
+      { id: 'm4a1-printstream', w: 10 }, { id: 'ak-fire', w: 10 },
+      { id: 'm4-neon', w: 5 }, { id: 'butterfly', w: 5 },
     ],
   },
 ];
@@ -167,7 +170,7 @@ function todayKey() {
 }
 function targetChance(stake, price) {
   if (!(stake > 0) || !(price > 0)) return 0;
-  return Math.round(clamp((stake / price) * EDGE * 100, 1, 95) * 10) / 10;
+  return Math.round(clamp((stake / price) * EDGE * 100, 0, 95) * 10) / 10;
 }
 
 /* ---------------- состояние ---------------- */
