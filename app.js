@@ -53,6 +53,13 @@ const CATALOG = [
   { id: 'talon-marble',    name: '★ Talon | Marble Fade',    price: 1100, rarity: 'knife',      emoji: '🔪', c1: '#ffcf6b', c2: '#3a0f0f' },
   { id: 'butterfly',       name: '★ Butterfly | Gamma',      price: 1200, rarity: 'knife',      emoji: '🦋', c1: '#ffcf6b', c2: '#0f3d3a' },
   { id: 'awp-dragon',      name: 'AWP | Dragon Lore',        price: 1500, rarity: 'covert',     emoji: '🐉', c1: '#eb4b4b', c2: '#4a2a05' },
+  { id: 'glock-water',     name: 'Glock-18 | Water Elemental', price: 90, rarity: 'restricted', emoji: '🌊', c1: '#8847ff', c2: '#0b2c4a' },
+  { id: 'usp-neonoir',     name: 'USP-S | Neo-Noir',         price: 130,  rarity: 'classified', emoji: '🕶️', c1: '#d32ce6', c2: '#1b1030' },
+  { id: 'ak-fire',         name: 'AK-47 | Fire Serpent',     price: 480,  rarity: 'covert',     emoji: '🐍', c1: '#eb4b4b', c2: '#3d2405' },
+  { id: 'm4-howl',         name: 'M4A4 | Howl',              price: 800,  rarity: 'covert',     emoji: '🐺', c1: '#eb4b4b', c2: '#3a1a08' },
+  { id: 'awp-medusa',      name: 'AWP | Medusa',             price: 950,  rarity: 'covert',     emoji: '🐙', c1: '#eb4b4b', c2: '#0b3a2e' },
+  { id: 'karambit-fade',   name: '★ Karambit | Fade',        price: 1400, rarity: 'knife',      emoji: '🌗', c1: '#ffcf6b', c2: '#4a1a3d' },
+  { id: 'butterfly-doppler', name: '★ Butterfly | Doppler',  price: 1600, rarity: 'knife',      emoji: '🦋', c1: '#ffcf6b', c2: '#24104a' },
 ];
 
 const CASES = [
@@ -82,6 +89,23 @@ const CASES = [
       { id: 'talon-marble', w: 6 }, { id: 'butterfly', w: 6 },
     ],
   },
+  {
+    id: 'budget', name: 'Бюджетный', price: 75, emoji: '🧰', c1: '#34e59a', c2: '#0b3a2a',
+    pool: [
+      { id: 'famas-roll', w: 34 }, { id: 'mp9-starlight', w: 28 }, { id: 'glock-water', w: 16 },
+      { id: 'ak-redline', w: 10 }, { id: 'sg553-integrale', w: 6 }, { id: 'glock-fade', w: 4 },
+      { id: 'usp-neonoir', w: 1.6 }, { id: 'usp-kill', w: 0.4 },
+    ],
+  },
+  {
+    id: 'elite', name: 'Элитный', price: 5000, emoji: '💎', c1: '#d32ce6', c2: '#2a0a3d',
+    pool: [
+      { id: 'm4-neon', w: 20 }, { id: 'ak-fire', w: 16 }, { id: 'awp-asiimov', w: 14 },
+      { id: 'm4a1-printstream', w: 12 }, { id: 'm4-howl', w: 10 }, { id: 'awp-medusa', w: 8 },
+      { id: 'awp-dragon', w: 6 }, { id: 'knife-doppler', w: 6 }, { id: 'talon-marble', w: 3.6 },
+      { id: 'butterfly-doppler', w: 2.4 }, { id: 'karambit-fade', w: 1.6 }, { id: 'butterfly', w: 0.4 },
+    ],
+  },
 ];
 
 const ACHIEVEMENTS = [
@@ -93,12 +117,40 @@ const ACHIEVEMENTS = [
   { id: 'x10',       icon: '💎', name: 'Ва-банк',      desc: 'Выиграй с множителем ×10',       reward: 500, check: (s) => s.maxMultWin >= 10 },
   { id: 'collector', icon: '🎒', name: 'Коллекционер', desc: '10 предметов в инвентаре',       reward: 300, check: (s) => s.inventory.length >= 10 },
   { id: 'rich',      icon: '👑', name: 'Богач',        desc: 'Баланс 10 000 ◈',                reward: 700, check: (s) => s.balance >= 10000 },
+  { id: 'hundred',   icon: '🏆', name: 'Ветеран',      desc: '100 апгрейдов',                  reward: 1200, check: (s) => s.upgrades >= 100 },
+  { id: 'lvl10',     icon: '🌟', name: 'Профи',        desc: 'Достигни 10 уровня',             reward: 1000, check: (s) => s.level >= 10 },
+  { id: 'sniper',    icon: '🎯', name: 'Снайпер',      desc: 'Выиграй предмет-цель',           reward: 600, check: (s) => s.targetWins >= 1 },
+  { id: 'coin',      icon: '🪙', name: 'Орёл и решка', desc: 'Выиграй в монетке',              reward: 150, check: (s) => s.coinWins >= 1 },
+  { id: 'knifehunt', icon: '🗡️', name: 'Охотник за ножами', desc: 'Выбей нож из кейса',        reward: 800, check: (s) => s.knifeDrops >= 1 },
+  { id: 'twenty',    icon: '📦', name: 'Склад',        desc: '20 предметов в инвентаре',       reward: 500, check: (s) => s.inventory.length >= 20 },
 ];
 
 const MULTIPLIERS = [1.2, 1.5, 2, 3, 5, 10];
 const EDGE = 0.95;
+const COIN_CHANCE = 47.5;
 const DAY = 24 * 3600 * 1000;
 const LS = 'upgrader_v2';
+
+const PROMOS = { UPGRADER: 1000, DEMO500: 500, LUCKY777: 777 };
+
+const DAILY_QUESTS = [
+  { id: 'q-up',   name: 'Сделай 3 апгрейда',  goal: 3, key: 'upgrades', reward: 200 },
+  { id: 'q-case', name: 'Открой 1 кейс',      goal: 1, key: 'cases',    reward: 150 },
+  { id: 'q-win',  name: 'Выиграй 2 раунда',   goal: 2, key: 'wins',     reward: 300 },
+];
+
+const BOTS = [
+  { name: 'm0nesy_fan', w: 184500, b: 24800 },
+  { name: 'skinlord',   w: 142300, b: 18600 },
+  { name: 'drop_hunter',w: 118700, b: 15900 },
+  { name: 'NIGHTFALL',  w: 96400,  b: 12400 },
+  { name: 'Kaban4ik',   w: 81300,  b: 9800 },
+  { name: 'lucky_panda',w: 67200,  b: 8300 },
+  { name: 'v1ncent',    w: 54800,  b: 6100 },
+  { name: 'Тимофей',    w: 43100,  b: 4700 },
+  { name: 'GG_WP',      w: 32900,  b: 3600 },
+  { name: 'pixel_dust', w: 21500,  b: 2400 },
+];
 const USERS = [
   'xX_Sniper_Xx', 'Kaban4ik', 'drop_hunter', 'NoScope', 'Мария', 'v1ncent',
   'GG_WP', 'skinlord', 'Тимофей', 'zeus_king', 'm0nesy_fan', 'Толян',
@@ -108,6 +160,15 @@ const USERS = [
 const catalogById = (id) => CATALOG.find((c) => c.id === id);
 const rarityOf = (c) => RARITY[c.rarity] || RARITY.industrial;
 const chanceOf = (mult) => Math.round((1 / mult) * EDGE * 1000) / 10;
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function targetChance(stake, price) {
+  if (!(stake > 0) || !(price > 0)) return 0;
+  return Math.round(clamp((stake / price) * EDGE * 100, 1, 95) * 10) / 10;
+}
 
 /* ---------------- состояние ---------------- */
 function defaultState() {
@@ -133,6 +194,14 @@ function defaultState() {
     sound: true,
     lastBonus: 0,
     mult: 2,
+    targetMode: false,
+    targetId: null,
+    coinSide: 0,
+    coinWins: 0,
+    targetWins: 0,
+    knifeDrops: 0,
+    promos: [],
+    daily: { date: '', upgrades: 0, cases: 0, wins: 0, claimed: [] },
     serverSeed: randomHex(16),
     clientSeed: 'player-' + randomHex(3),
     nonce: 0,
@@ -166,21 +235,65 @@ function loadState() {
     s.balanceHistory = Array.isArray(s.balanceHistory) ? s.balanceHistory.filter((p) => p && Number.isFinite(p.t) && Number.isFinite(p.v)).slice(-200) : [];
     s.unlocked = Array.isArray(s.unlocked) ? s.unlocked : [];
     if (!MULTIPLIERS.includes(s.mult)) s.mult = 2;
+    s.targetMode = !!s.targetMode;
+    s.targetId = s.targetId && catalogById(s.targetId) ? s.targetId : null;
+    if (s.targetMode && !s.targetId) s.targetMode = false;
+    s.coinSide = s.coinSide === 1 ? 1 : 0;
+    s.coinWins = Math.max(0, Math.floor(Number(s.coinWins) || 0));
+    s.targetWins = Math.max(0, Math.floor(Number(s.targetWins) || 0));
+    s.knifeDrops = Math.max(0, Math.floor(Number(s.knifeDrops) || 0));
+    s.promos = Array.isArray(s.promos) ? s.promos.filter((c) => typeof c === 'string') : [];
+    if (!s.daily || typeof s.daily !== 'object' || s.daily.date !== todayKey()) {
+      s.daily = { date: todayKey(), upgrades: 0, cases: 0, wins: 0, claimed: [] };
+    } else {
+      s.daily.upgrades = Math.max(0, Math.floor(Number(s.daily.upgrades) || 0));
+      s.daily.cases = Math.max(0, Math.floor(Number(s.daily.cases) || 0));
+      s.daily.wins = Math.max(0, Math.floor(Number(s.daily.wins) || 0));
+      s.daily.claimed = Array.isArray(s.daily.claimed) ? s.daily.claimed.filter((q) => typeof q === 'string') : [];
+    }
     if (typeof s.serverSeed !== 'string' || !s.serverSeed) s.serverSeed = randomHex(16);
     if (typeof s.clientSeed !== 'string' || !s.clientSeed) s.clientSeed = 'player-' + randomHex(3);
     if (!Number.isFinite(s.nonce) || s.nonce < 0) s.nonce = 0;
-    if (s.pending && (s.pending.mode !== 'upgrade' && s.pending.mode !== 'case')) s.pending = null;
+    if (s.pending && !['upgrade', 'case', 'coinflip'].includes(s.pending.mode)) s.pending = null;
+    if (s.pending) {
+      s.pending.owner = typeof s.pending.owner === 'string' ? s.pending.owner : '';
+      if (!Number.isFinite(s.pending.ts)) s.pending.ts = 0;
+    }
     if (s.pending && s.pending.mode === 'case' && !catalogById(s.pending.itemId)) s.pending = null;
+    if (s.pending && s.pending.mode === 'upgrade' && s.pending.targetId && !catalogById(s.pending.targetId)) s.pending.targetId = null;
+    if (s.pending && s.pending.mode === 'coinflip') {
+      s.pending.side = s.pending.side === 1 ? 1 : 0;
+      if (!(Number(s.pending.stake) > 0)) s.pending = null;
+    }
     return s;
   } catch (e) {
     return defaultState();
   }
 }
 
+/* Идентификатор вкладки: sessionStorage переживает перезагрузку, но уникален
+   для каждой вкладки. Нужен, чтобы вкладка не «присваивала» чужой раунд. */
+const TAB_ID = (() => {
+  try {
+    let id = sessionStorage.getItem('upgrader_tab');
+    if (!id) {
+      id = randomHex(6);
+      sessionStorage.setItem('upgrader_tab', id);
+    }
+    return id;
+  } catch (e) {
+    return randomHex(6);
+  }
+})();
+
 let state = loadState();
 let selected = new Set();
 let spinning = false;
 let caseOpening = false;
+let coinBusy = false;
+let remoteBusy = false;
+let remoteTimer = 0;
+let currentCaseId = null;
 let shopFilter = 'all';
 let seedRevealed = false;
 let serverHashHex = '';
@@ -234,17 +347,24 @@ const el = {
 
   chanceVal: $('#chanceVal'),
   multVal: $('#multVal'),
+  arena: $('.arena'),
   wheelRing: $('#wheelRing'),
   wheelPointer: $('#wheelPointer'),
   wheelLabel: $('#wheelLabel'),
   wheelSub: $('#wheelSub'),
   multRow: $('#multRow'),
+  modeRow: $('#modeRow'),
+  targetPick: $('#targetPick'),
+  targetEmoji: $('#targetEmoji'),
+  targetName: $('#targetName'),
+  targetChance: $('#targetChance'),
   stakeTotal: $('#stakeTotal'),
   potential: $('#potential'),
   upgradeBtn: $('#upgradeBtn'),
   arenaHint: $('#arenaHint'),
 
   feed: $('#feed'),
+  online: $('#online'),
   clientSeed: $('#clientSeed'),
   fairNonce: $('#fairNonce'),
   serverHash: $('#serverHash'),
@@ -261,6 +381,21 @@ const el = {
   caseReel: $('#caseReel'),
   caseResult: $('#caseResult'),
   caseTake: $('#caseTake'),
+  caseAgain: $('#caseAgain'),
+
+  targetModal: $('#targetModal'),
+  targetClose: $('#targetClose'),
+  targetGrid: $('#targetGrid'),
+
+  coin: $('#coin'),
+  coinSides: $('#coinSides'),
+  coinAmount: $('#coinAmount'),
+  coinMinus: $('#coinMinus'),
+  coinPlus: $('#coinPlus'),
+  coinQuick: $('#coinQuick'),
+  flipBtn: $('#flipBtn'),
+  coinHint: $('#coinHint'),
+  coinStats: $('#coinStats'),
 
   shopFilters: $('#shopFilters'),
   shopGrid: $('#shopGrid'),
@@ -280,6 +415,12 @@ const el = {
   achCount: $('#achCount'),
   achievements: $('#achievements'),
   history: $('#history'),
+
+  questCount: $('#questCount'),
+  dailyQuests: $('#dailyQuests'),
+  promoInput: $('#promoInput'),
+  promoBtn: $('#promoBtn'),
+  leaderboard: $('#leaderboard'),
 
   toast: $('#toast'),
 };
@@ -306,7 +447,40 @@ function pruneSelected() {
 
 /* блокировка любых действий во время раунда/кейса/модалки */
 function locked() {
-  return spinning || caseOpening || el.caseModal.classList.contains('open');
+  return spinning || caseOpening || coinBusy || remoteBusy || !!state.pending ||
+    el.caseModal.classList.contains('open') ||
+    (el.targetModal && el.targetModal.classList.contains('open'));
+}
+
+/* Чужой незавершённый раунд (другая вкладка) не даёт начать новый.
+   Если вкладка-владелец закрылась, по истечении «аренды» засчитываем раунд. */
+const PENDING_LEASE = 15000;
+function scheduleRemotePending() {
+  clearTimeout(remoteTimer);
+  const p = state.pending;
+  if (!p) { remoteBusy = false; return; }
+  const age = Date.now() - (Number(p.ts) || 0);
+  const delay = Math.max(600, PENDING_LEASE - age + 400);
+  remoteTimer = setTimeout(() => {
+    const next = loadState();
+    const np = next.pending;
+    if (!np) {
+      state = next;
+      remoteBusy = false;
+      renderAll();
+      return;
+    }
+    if (Date.now() - (Number(np.ts) || 0) > PENDING_LEASE) {
+      state = next;
+      remoteBusy = false;
+      const done = settlePending();
+      renderAll({ animateBalance: true });
+      if (done) toast('Незавершённый раунд засчитан', done.win ? 'win' : 'lose');
+    } else {
+      state = next;
+      scheduleRemotePending();
+    }
+  }, delay);
 }
 
 /* ---------------- fair ---------------- */
@@ -371,24 +545,33 @@ function settlePending() {
   if (p.mode === 'upgrade' && !(Number(p.stake) > 0)) { state.pending = null; save(); return null; }
   state.pending = null;
   const now = Date.now();
+  ensureDaily();
 
   if (p.mode === 'upgrade') {
     const coinBet = clamp(Math.floor(Number(p.coinBet) || 0), 0, Math.max(0, state.balance));
     const uids = new Set(Array.isArray(p.itemUids) ? p.itemUids : []);
     const stake = Math.max(0, Number(p.stake) || 0);
     const prize = Math.max(0, Number(p.prize) || 0);
+    const target = p.targetId ? catalogById(p.targetId) : null;
 
     state.balance = Math.max(0, state.balance - coinBet);
     state.inventory = state.inventory.filter((it) => !uids.has(it.uid));
-    if (p.win) state.balance += prize;
+
+    if (p.win) {
+      if (target) state.inventory.push({ uid: uid(), id: target.id });
+      else state.balance += prize;
+    }
 
     state.wagered += stake;
     state.upgrades += 1;
+    state.daily.upgrades += 1;
     if (p.win) {
       state.wins += 1;
+      state.daily.wins += 1;
       state.won += prize;
       state.best = Math.max(state.best, prize);
       state.maxMultWin = Math.max(state.maxMultWin, Number(p.mult) || 1);
+      if (target) state.targetWins += 1;
     } else {
       state.losses += 1;
     }
@@ -398,8 +581,8 @@ function settlePending() {
     state.history.unshift({
       mode: 'upgrade', ts: now, win: !!p.win, stake,
       mult: p.mult, chance: p.chance, prize: p.win ? prize : 0,
-      items: Array.isArray(p.itemNames) ? p.itemNames : [],
-      roll: p.roll, nonce: p.nonce,
+      items: target ? [target.emoji + ' ' + target.name] : (Array.isArray(p.itemNames) ? p.itemNames : []),
+      roll: p.roll, nonce: p.nonce, target: !!target,
     });
   } else if (p.mode === 'case') {
     const c = catalogById(p.itemId);
@@ -407,6 +590,8 @@ function settlePending() {
 
     state.balance = Math.max(0, state.balance - price);
     if (c) state.inventory.push({ uid: uid(), id: c.id });
+    state.daily.cases += 1;
+    if (c && c.rarity === 'knife') state.knifeDrops += 1;
 
     state.history.unshift({
       mode: 'case', ts: now, win: true, stake: price, mult: 1, chance: 100,
@@ -414,15 +599,63 @@ function settlePending() {
       roll: p.roll, nonce: p.nonce, caseName: p.caseName,
     });
     addXp(8);
+  } else if (p.mode === 'coinflip') {
+    const stake = clamp(Math.floor(Number(p.stake) || 0), 0, Math.max(0, state.balance));
+    const prize = Math.max(0, Number(p.prize) || 0);
+    const side = p.side === 1 ? 1 : 0;
+
+    state.balance = Math.max(0, state.balance - stake);
+    if (p.win) state.balance += prize;
+
+    state.wagered += stake;
+    if (p.win) {
+      state.wins += 1;
+      state.daily.wins += 1;
+      state.coinWins += 1;
+      state.won += prize;
+      state.best = Math.max(state.best, prize);
+    } else {
+      state.losses += 1;
+    }
+
+    addXp(p.win ? 6 : 2);
+
+    state.history.unshift({
+      mode: 'coin', ts: now, win: !!p.win, stake, mult: 2, chance: COIN_CHANCE,
+      prize: p.win ? prize : 0,
+      items: [side ? '🪙 Решка' : '🪙 Орёл'],
+      roll: p.roll, nonce: p.nonce,
+    });
   } else {
     return null;
   }
 
   state.history = state.history.slice(0, 200);
   checkAchievements();
+  checkDaily();
   recordBalance();
   save();
   return p;
+}
+
+function ensureDaily() {
+  if (!state.daily || state.daily.date !== todayKey()) {
+    state.daily = { date: todayKey(), upgrades: 0, cases: 0, wins: 0, claimed: [] };
+  }
+}
+
+function checkDaily() {
+  ensureDaily();
+  for (const q of DAILY_QUESTS) {
+    if (state.daily.claimed.includes(q.id)) continue;
+    if ((state.daily[q.key] || 0) >= q.goal) {
+      state.daily.claimed.push(q.id);
+      state.balance += q.reward;
+      toast('Задание «' + q.name + '» выполнено: +' + q.reward + ' ◈', 'win');
+      beep(640, 0.08, 'sine', 0.04, 0);
+      beep(920, 0.12, 'sine', 0.04, 0.09);
+    }
+  }
 }
 
 function addXp(amount) {
@@ -599,6 +832,44 @@ function renderProfile() {
   ).join('');
 
   renderHistory();
+  renderDaily();
+  renderLeaderboard();
+}
+
+function renderDaily() {
+  ensureDaily();
+  el.dailyQuests.innerHTML = DAILY_QUESTS.map((q) => {
+    const cur = Math.min(q.goal, state.daily[q.key] || 0);
+    const done = state.daily.claimed.includes(q.id) || cur >= q.goal;
+    return '<div class="quest' + (done ? ' done' : '') + '">' +
+      '<div class="quest-top"><b>' + esc(q.name) + '</b><span>+' + q.reward + ' ◈</span></div>' +
+      '<div class="quest-bar"><i style="width:' + Math.round((cur / q.goal) * 100) + '%"></i></div>' +
+      '<div class="quest-sub">' + cur + ' / ' + q.goal + '</div>' +
+      '</div>';
+  }).join('');
+  el.questCount.textContent = state.daily.claimed.length + '/' + DAILY_QUESTS.length;
+}
+
+function renderLeaderboard() {
+  const rows = BOTS.map((b) => ({ name: b.name, w: b.w, b: b.b, me: false }));
+  rows.push({ name: 'Ты', w: Math.round(state.wagered), b: Math.round(state.best), me: true });
+  rows.sort((a, b) => b.w - a.w);
+
+  let list = rows.slice(0, 8);
+  const me = rows.find((r) => r.me);
+  if (me && !list.includes(me)) {
+    list = rows.slice(0, 7).concat([me]);
+  }
+
+  el.leaderboard.innerHTML = list.map((r) => {
+    const rank = rows.indexOf(r) + 1;
+    return '<div class="board-row' + (r.me ? ' me' : '') + '">' +
+      '<span class="board-rank">' + (rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '#' + rank) + '</span>' +
+      '<span class="board-name">' + esc(r.name) + '</span>' +
+      '<span class="board-val">оборот <b>' + fmt(r.w) + '</b></span>' +
+      '<span class="board-val board-best">лучший <b>' + fmt(r.b) + '</b></span>' +
+      '</div>';
+  }).join('');
 }
 
 function renderHistory() {
@@ -610,7 +881,7 @@ function renderHistory() {
   el.history.innerHTML = state.history.slice(0, 80).map((h) => {
     const time = new Date(h.ts).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     const items = (h.items || []).join(', ') || '—';
-    const mult = h.mode === 'case' ? 'КЕЙС' : '×' + h.mult;
+    const mult = h.mode === 'case' ? 'КЕЙС' : h.mode === 'coin' ? 'МОНЕТА' : '×' + h.mult;
     const res = h.win ? '+' + fmt(h.prize) : '−' + fmt(h.stake);
     return '<div class="hist-row">' +
       '<span class="hist-time">' + time + '</span>' +
@@ -639,20 +910,35 @@ function renderAll(opts = {}) {
   renderCases();
   renderProfile();
   renderFair();
+  updateCoinUI();
   if ($('#view-profile').classList.contains('active')) requestAnimationFrame(drawChart);
 }
 
 function updateArena() {
   const bet = Math.min(betValue(), Math.max(0, state.balance));
   const stake = itemsValue(selectedItems()) + bet;
+  const target = state.targetMode && state.targetId ? catalogById(state.targetId) : null;
   const mult = MULTIPLIERS.includes(state.mult) ? state.mult : 2;
-  const chance = chanceOf(mult);
+
+  let chance;
+  let potential;
+  let shownMult;
+  if (target) {
+    chance = targetChance(stake, target.price);
+    potential = target.price;
+    shownMult = stake > 0 ? Math.round((target.price / stake) * 100) / 100 : 0;
+  } else {
+    chance = chanceOf(mult);
+    potential = stake * mult;
+    shownMult = mult;
+  }
+
   const deg = chance * 3.6;
 
-  el.chanceVal.textContent = chance.toFixed(1).replace('.0', '') + '%';
-  el.multVal.textContent = String(mult);
+  el.chanceVal.textContent = (chance > 0 ? chance.toFixed(1).replace('.0', '') : '0') + '%';
+  el.multVal.textContent = String(shownMult);
   el.stakeTotal.textContent = fmt(stake);
-  el.potential.textContent = fmt(stake * mult);
+  el.potential.textContent = fmt(potential);
 
   el.wheelRing.style.background =
     'conic-gradient(from -90deg,#34e59a 0deg,#1fa86f ' + deg + 'deg,#3a1520 ' + deg + 'deg,#5a1b2c 360deg)';
@@ -660,13 +946,27 @@ function updateArena() {
   $$('.mult-btn', el.multRow).forEach((b) => {
     b.classList.toggle('active', Number(b.dataset.mult) === mult);
   });
+  $$('.mode-btn', el.modeRow).forEach((b) => {
+    b.classList.toggle('active', (b.dataset.mode === 'item') === !!target);
+  });
+  el.arena.classList.toggle('item-mode', !!target);
+  el.targetPick.hidden = !target;
+  if (target) {
+    el.targetEmoji.textContent = target.emoji;
+    el.targetName.textContent = target.name;
+    el.targetChance.textContent = chance > 0 ? chance + '%' : '—';
+  }
 
-  const can = stake > 0 && !spinning;
+  const can = stake > 0 && !spinning && (!target || chance >= 1);
   el.upgradeBtn.disabled = !can;
   el.upgradeBtn.classList.toggle('ready', can);
 
   if (spinning) el.arenaHint.textContent = 'Крутим...';
-  else if (stake > 0) el.arenaHint.textContent = 'Ставка ' + fmt(stake) + ' ◈ → выигрыш ' + fmt(stake * mult) + ' ◈';
+  else if (state.targetMode && !target) el.arenaHint.textContent = 'Выбери предмет-цель';
+  else if (target && stake > 0 && chance < 1) el.arenaHint.textContent = 'Ставка слишком мала для этой цели';
+  else if (stake > 0) el.arenaHint.textContent = target
+    ? 'Ставка ' + fmt(stake) + ' ◈ → ' + target.emoji + ' ' + target.name
+    : 'Ставка ' + fmt(stake) + ' ◈ → выигрыш ' + fmt(stake * mult) + ' ◈';
   else el.arenaHint.textContent = 'Выбери предметы или добавь монеты';
 }
 
@@ -739,8 +1039,21 @@ async function doUpgrade() {
     return;
   }
 
-  const mult = MULTIPLIERS.includes(state.mult) ? state.mult : 2;
-  const chance = chanceOf(mult);
+  const target = state.targetMode && state.targetId ? catalogById(state.targetId) : null;
+  if (state.targetMode && !target) {
+    toast('Выбери предмет-цель');
+    return;
+  }
+
+  const mult = target
+    ? Math.round((target.price / Math.max(1, stake)) * 100) / 100
+    : (MULTIPLIERS.includes(state.mult) ? state.mult : 2);
+  const chance = target ? targetChance(stake, target.price) : chanceOf(mult);
+  if (chance < 1) {
+    toast('Ставка слишком мала для этого предмета');
+    return;
+  }
+
   const itemUids = items.map((i) => i.uid);
   const itemNames = items.map((i) => {
     const c = catalogById(i.id);
@@ -751,44 +1064,52 @@ async function doUpgrade() {
   setBusy(true);
   el.wheelLabel.textContent = '...';
   el.wheelLabel.className = 'wheel-label';
-  el.wheelSub.textContent = '×' + mult;
+  el.wheelSub.textContent = target ? '🎯 ' + target.name : '×' + mult;
 
   let finished = false;
   try {
     const r = await roll();
     const win = r * 100 < chance;
-    const prize = Math.round(stake * mult);
+    const prize = target ? target.price : Math.round(stake * mult);
 
     // Фиксируем исход ДО анимации: перезагрузка не переиграет раунд.
     state.pending = {
-      mode: 'upgrade', ts: Date.now(), stake, mult, chance, win, prize,
-      coinBet, itemUids, itemNames, roll: r, nonce: state.nonce - 1,
+      mode: 'upgrade', ts: Date.now(), owner: TAB_ID, stake, mult, chance, win, prize,
+      coinBet, itemUids, itemNames,
+      targetId: target ? target.id : null,
+      roll: r, nonce: state.nonce - 1,
     };
     save();
 
     const chanceDeg = chance * 3.6;
-    const target = win
+    const angle = win
       ? rand(2, Math.max(3, chanceDeg - 2))
       : rand(Math.min(357, chanceDeg + 2), 358);
     const spins = 4 + Math.floor(Math.random() * 2);
 
-    await animatePointer(spins * 360 + target, reduceMotion ? 700 : 3600);
+    await animatePointer(spins * 360 + angle, reduceMotion ? 700 : 3600);
 
     const p = settlePending();
     selected.clear();
-    el.coinBet.value = 0;
 
     if (p) {
       if (p.win) {
+        const wonTarget = p.targetId ? catalogById(p.targetId) : null;
         el.wheelLabel.textContent = 'WIN';
         el.wheelLabel.className = 'wheel-label win';
-        el.wheelSub.textContent = '+' + fmt(p.prize) + ' ◈';
+        el.wheelSub.textContent = wonTarget ? wonTarget.emoji + ' ' + wonTarget.name : '+' + fmt(p.prize) + ' ◈';
         beep(660, 0.10, 'sine', 0.05, 0);
         beep(880, 0.12, 'sine', 0.05, 0.10);
         beep(1320, 0.20, 'sine', 0.05, 0.22);
-        toast('Победа! +' + fmt(p.prize) + ' ◈', 'win');
-        pushFeed('Ты', items[0]?.id, p.mult, true, p.stake);
-        confetti(p.prize >= 1000 ? 150 : 90);
+        if (wonTarget) {
+          toast('Предмет получен: ' + wonTarget.name, 'win');
+          pushFeed('Ты', wonTarget.id, p.mult, true, p.stake);
+          confetti(wonTarget.price >= 1000 ? 160 : 100);
+        } else {
+          toast('Победа! +' + fmt(p.prize) + ' ◈', 'win');
+          pushFeed('Ты', items[0]?.id, p.mult, true, p.stake);
+          confetti(p.prize >= 1000 ? 150 : 90);
+        }
       } else {
         el.wheelLabel.textContent = 'LOSE';
         el.wheelLabel.className = 'wheel-label lose';
@@ -856,31 +1177,38 @@ function startTicks(duration) {
 }
 
 function spinReel() {
-  const first = el.caseReel.firstElementChild;
-  const itemW = first ? first.getBoundingClientRect().width : 118;
-  const gap = parseFloat(getComputedStyle(el.caseReel).gap) || 10;
-  const step = itemW + gap;
+  const winEl = el.caseReel.children[WIN_INDEX];
+  if (!winEl) return;
+
+  // Считаем по layout-метрикам (offsetLeft/offsetWidth), а не по
+  // getBoundingClientRect: они не зависят от scale-анимации модалки.
   const wrapW = el.reelWrap.clientWidth;
-  const offset = WIN_INDEX * step + itemW / 2 - wrapW / 2;
+  const offset = Math.max(0, winEl.offsetLeft + winEl.offsetWidth / 2 - wrapW / 2);
+  const dur = reduceMotion ? 0.7 : 4.6;
 
   el.caseReel.style.transition = 'none';
   el.caseReel.style.transform = 'translate3d(0,0,0)';
   void el.caseReel.offsetWidth;
 
-  el.caseReel.style.transition = 'transform ' + (reduceMotion ? 0.7 : 4.2) + 's cubic-bezier(.08,.72,.12,1)';
+  el.caseReel.style.transition = 'transform ' + dur + 's cubic-bezier(.12,.72,.1,1)';
   el.caseReel.style.transform = 'translate3d(' + (-offset) + 'px,0,0)';
-  startTicks(reduceMotion ? 700 : 4200);
+  startTicks(dur * 1000);
 }
 
 function resetReel() {
   clearTimeout(reelTickTimer);
   el.caseReel.style.transition = 'none';
   el.caseReel.style.transform = 'translate3d(0,0,0)';
+  $$('.case-item.won', el.caseReel).forEach((n) => n.classList.remove('won'));
+  el.caseResult.classList.remove('reveal');
 }
 
 function openModal(box) {
+  currentCaseId = box.id;
   el.caseTitle.textContent = box.name;
   el.caseResult.textContent = '';
+  el.caseResult.classList.remove('reveal');
+  el.caseAgain.disabled = true;
   el.caseModal.classList.add('open');
   el.caseModal.setAttribute('aria-hidden', 'false');
   document.body.classList.add('modal-open');
@@ -893,10 +1221,17 @@ function closeCase() {
   el.caseModal.classList.remove('open');
   el.caseModal.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('modal-open');
+  el.caseAgain.disabled = true;
   resetReel();
 }
 
 function showCaseResult(p, winner) {
+  el.caseResult.classList.remove('reveal');
+  void el.caseResult.offsetWidth;
+
+  const winEl = el.caseReel.children[WIN_INDEX];
+  if (winEl) winEl.classList.add('won');
+
   if (!p || !winner) {
     el.caseResult.textContent = 'Готово';
     return;
@@ -905,6 +1240,7 @@ function showCaseResult(p, winner) {
   el.caseResult.innerHTML =
     '<span class="win-name" style="color:' + r.color + '">' + winner.emoji + ' ' + esc(winner.name) + '</span>' +
     '<span class="win-price">≈ ' + fmt(winner.price) + ' ◈ · в инвентарь</span>';
+  el.caseResult.classList.add('reveal');
 }
 
 async function openCase(caseId) {
@@ -922,6 +1258,7 @@ async function openCase(caseId) {
   document.body.classList.add('case-busy');
   el.caseTake.disabled = true;
   el.caseClose.disabled = true;
+  el.caseAgain.disabled = true;
 
   try {
     const r = await roll();
@@ -930,7 +1267,7 @@ async function openCase(caseId) {
 
     // Фиксируем исход до анимации.
     state.pending = {
-      mode: 'case', ts: Date.now(), caseId: box.id, caseName: box.name,
+      mode: 'case', ts: Date.now(), owner: TAB_ID, caseId: box.id, caseName: box.name,
       itemId: winnerId, price: box.price, roll: r, nonce: state.nonce - 1,
     };
     save();
@@ -939,11 +1276,12 @@ async function openCase(caseId) {
     openModal(box);
     await nextFrame();
     spinReel();
-    await wait(reduceMotion ? 900 : 4400);
+    await wait(reduceMotion ? 900 : 4900);
 
     const p = settlePending();
     showCaseResult(p, winner);
     renderAll({ animateBalance: true });
+    el.caseAgain.disabled = false;
 
     if (winner && winner.rarity === 'knife') {
       confetti(160);
@@ -967,6 +1305,179 @@ async function openCase(caseId) {
     el.caseTake.disabled = false;
     el.caseClose.disabled = false;
   }
+}
+
+/* ---------------- монетка ---------------- */
+function coinAmountValue() {
+  const n = Math.floor(Number(el.coinAmount.value));
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+function clampCoinInput() {
+  const v = clamp(coinAmountValue(), 0, Math.max(0, state.balance));
+  if (String(v) !== el.coinAmount.value) el.coinAmount.value = v;
+  return v;
+}
+function updateCoinUI() {
+  const amount = Math.min(coinAmountValue(), Math.max(0, state.balance));
+  const can = amount > 0 && !locked();
+  el.flipBtn.disabled = !can;
+  el.flipBtn.classList.toggle('ready', can);
+  $$('.side-btn', el.coinSides).forEach((b) => {
+    b.classList.toggle('active', Number(b.dataset.side) === state.coinSide);
+  });
+  if (!coinBusy) {
+    el.coinHint.textContent = amount > 0
+      ? 'Ставка ' + fmt(amount) + ' ◈ → выигрыш ' + fmt(amount * 2) + ' ◈'
+      : 'Шанс 47.5% · выплата ×2';
+  }
+  el.coinStats.textContent = state.coinWins;
+}
+
+async function flipCoin() {
+  if (locked()) return;
+  const amount = clampCoinInput();
+  if (amount <= 0) { toast('Поставь монеты'); return; }
+  if (amount > state.balance) { toast('Недостаточно монет'); return; }
+
+  const side = state.coinSide;
+  coinBusy = true;
+  updateCoinUI();
+  el.coin.style.transition = 'none';
+  el.coin.style.transform = 'rotateY(0deg)';
+  void el.coin.offsetWidth;
+
+  try {
+    const r = await roll();
+    const win = r * 100 < COIN_CHANCE;
+    const prize = amount * 2;
+
+    // Исход фиксируется до анимации.
+    state.pending = {
+      mode: 'coinflip', ts: Date.now(), owner: TAB_ID, stake: amount, side, win, prize,
+      roll: r, nonce: state.nonce - 1,
+    };
+    save();
+
+    const land = win ? side : 1 - side;
+    const deg = 5 * 360 + (land ? 180 : 0);
+    el.coin.style.transition = 'transform ' + (reduceMotion ? 0.4 : 1.9) + 's cubic-bezier(.2,.8,.2,1)';
+    el.coin.style.transform = 'rotateY(' + deg + 'deg)';
+    await wait(reduceMotion ? 600 : 2100);
+
+    const p = settlePending();
+    if (p) {
+      if (p.win) {
+        el.coinHint.textContent = 'Победа! +' + fmt(p.prize) + ' ◈';
+        toast('Монетка: победа +' + fmt(p.prize) + ' ◈', 'win');
+        confetti(p.prize >= 2000 ? 140 : 80);
+        beep(660, 0.10, 'sine', 0.05, 0);
+        beep(880, 0.12, 'sine', 0.05, 0.10);
+        beep(1320, 0.20, 'sine', 0.05, 0.22);
+      } else {
+        el.coinHint.textContent = 'Не угадал. −' + fmt(p.stake) + ' ◈';
+        toast('Монетка: −' + fmt(p.stake) + ' ◈', 'lose');
+        beep(240, 0.18, 'sawtooth', 0.035, 0);
+        beep(160, 0.28, 'sawtooth', 0.03, 0.12);
+      }
+      renderAll({ animateBalance: true });
+    }
+  } catch (err) {
+    console.error(err);
+    if (state.pending) settlePending();
+    toast('Ошибка раунда. Попробуй ещё раз');
+    renderAll();
+  } finally {
+    coinBusy = false;
+    updateCoinUI();
+  }
+}
+
+/* ---------------- цель апгрейда ---------------- */
+function renderTargetGrid() {
+  const bet = Math.min(betValue(), Math.max(0, state.balance));
+  const stake = itemsValue(selectedItems()) + bet;
+  el.targetGrid.innerHTML = CATALOG.slice().sort((a, b) => a.price - b.price).map((c) => {
+    const r = rarityOf(c);
+    const ch = targetChance(stake, c.price);
+    const low = ch < 1;
+    const label = stake > 0 ? (low ? 'нужна ставка больше' : 'шанс ' + ch + '%') : 'шанс —';
+    return '<button class="target-item' + (state.targetId === c.id ? ' sel' : '') + '" data-target-id="' + c.id + '"' +
+      ' style="--c1:' + c.c1 + ';--c2:' + c.c2 + ';--rar:' + r.color + '" title="' + esc(c.name) + '">' +
+      '<span class="item-glow" aria-hidden="true"></span>' +
+      '<span class="item-art" aria-hidden="true">' + c.emoji + '</span>' +
+      '<span class="t-emoji">' + c.emoji + '</span>' +
+      '<span class="t-name">' + esc(c.name) + '</span>' +
+      '<span class="t-price">◈ ' + fmt(c.price) + '</span>' +
+      '<span class="t-chance' + (low ? ' low' : '') + '">' + label + '</span>' +
+      '</button>';
+  }).join('');
+}
+
+function openTargetPicker() {
+  if (locked()) return;
+  renderTargetGrid();
+  el.targetModal.classList.add('open');
+  el.targetModal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  const card = el.targetModal.querySelector('.modal-card');
+  if (card) card.focus();
+}
+
+function closeTargetPicker() {
+  el.targetModal.classList.remove('open');
+  el.targetModal.setAttribute('aria-hidden', 'true');
+  if (!el.caseModal.classList.contains('open')) document.body.classList.remove('modal-open');
+}
+
+function chooseTarget(id) {
+  const c = catalogById(id);
+  if (!c) return;
+  state.targetId = c.id;
+  state.targetMode = true;
+  save();
+  closeTargetPicker();
+  updateArena();
+  beep(720, 0.05, 'sine', 0.03);
+  toast('Цель: ' + c.name);
+}
+
+/* ---------------- промокод ---------------- */
+function redeemPromo() {
+  if (locked()) return;
+  const code = String(el.promoInput.value || '').trim().toUpperCase();
+  if (!code) { toast('Введи промокод'); return; }
+  const amount = PROMOS[code];
+  if (!amount) {
+    toast('Такого промокода нет');
+    beep(180, 0.16, 'sawtooth', 0.03);
+    return;
+  }
+  if (state.promos.includes(code)) { toast('Этот промокод уже использован'); return; }
+
+  state.promos.push(code);
+  state.balance += amount;
+  checkAchievements();
+  recordBalance();
+  save();
+  el.promoInput.value = '';
+  renderAll({ animateBalance: true });
+  toast('Промокод активирован: +' + fmt(amount) + ' ◈', 'win');
+  beep(520, 0.10, 'sine', 0.05, 0);
+  beep(780, 0.14, 'sine', 0.05, 0.11);
+  beep(1040, 0.18, 'sine', 0.05, 0.24);
+}
+
+/* ---------------- онлайн ---------------- */
+let onlineCount = 1100 + Math.floor(Math.random() * 500);
+function renderOnline() {
+  if (!el.online) return;
+  const b = el.online.querySelector('b');
+  if (b) b.textContent = fmt(onlineCount);
+}
+function onlineLoop() {
+  onlineCount = clamp(onlineCount + Math.floor(rand(-25, 30)), 780, 2400);
+  renderOnline();
+  setTimeout(onlineLoop, rand(4000, 9000));
 }
 
 /* ---------------- магазин / продажа ---------------- */
@@ -1281,6 +1792,67 @@ function bindEvents() {
   // апгрейд
   el.upgradeBtn.addEventListener('click', doUpgrade);
 
+  // режим апгрейда: монеты / предмет
+  el.modeRow.addEventListener('click', (e) => {
+    const b = e.target.closest('.mode-btn');
+    if (!b || locked()) return;
+    state.targetMode = b.dataset.mode === 'item';
+    save();
+    if (state.targetMode && !state.targetId) openTargetPicker();
+    else updateArena();
+    beep(620, 0.04, 'sine', 0.02);
+  });
+  el.targetPick.addEventListener('click', () => {
+    if (locked()) return;
+    openTargetPicker();
+  });
+  el.targetGrid.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-target-id]');
+    if (!b) return;
+    chooseTarget(b.dataset.targetId);
+  });
+  el.targetClose.addEventListener('click', closeTargetPicker);
+  el.targetModal.addEventListener('click', (e) => {
+    if (e.target === el.targetModal) closeTargetPicker();
+  });
+
+  // монетка
+  el.coinSides.addEventListener('click', (e) => {
+    const b = e.target.closest('.side-btn');
+    if (!b || locked()) return;
+    state.coinSide = Number(b.dataset.side) === 1 ? 1 : 0;
+    save();
+    updateCoinUI();
+    beep(620, 0.04, 'sine', 0.02);
+  });
+  el.coinAmount.addEventListener('input', updateCoinUI);
+  el.coinAmount.addEventListener('blur', () => { clampCoinInput(); updateCoinUI(); });
+  el.coinMinus.addEventListener('click', () => {
+    if (locked()) return;
+    el.coinAmount.value = Math.max(0, coinAmountValue() - 100);
+    updateCoinUI();
+  });
+  el.coinPlus.addEventListener('click', () => {
+    if (locked()) return;
+    el.coinAmount.value = Math.min(state.balance, coinAmountValue() + 100);
+    updateCoinUI();
+  });
+  el.coinQuick.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-bet]');
+    if (!b || locked()) return;
+    const v = b.dataset.bet === 'max' ? state.balance : Number(b.dataset.bet);
+    el.coinAmount.value = clamp(Math.floor(v), 0, Math.max(0, state.balance));
+    updateCoinUI();
+    beep(600, 0.04, 'sine', 0.02);
+  });
+  el.flipBtn.addEventListener('click', flipCoin);
+
+  // промокод
+  el.promoBtn.addEventListener('click', redeemPromo);
+  el.promoInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') redeemPromo();
+  });
+
   // продажа / сброс
   el.sellBtn.addEventListener('click', sellSelected);
   el.clearStake.addEventListener('click', () => {
@@ -1311,11 +1883,19 @@ function bindEvents() {
   });
   el.caseClose.addEventListener('click', closeCase);
   el.caseTake.addEventListener('click', closeCase);
+  el.caseAgain.addEventListener('click', () => {
+    if (caseOpening || !currentCaseId) return;
+    const id = currentCaseId;
+    closeCase();
+    openCase(id);
+  });
   el.caseModal.addEventListener('click', (e) => {
     if (e.target === el.caseModal) closeCase();
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && el.caseModal.classList.contains('open')) closeCase();
+    if (e.key !== 'Escape') return;
+    if (el.caseModal.classList.contains('open')) closeCase();
+    else if (el.targetModal.classList.contains('open')) closeTargetPicker();
   });
 
   // бонус / звук
@@ -1375,7 +1955,12 @@ function bindEvents() {
     if (e.code !== 'Space' || e.repeat) return;
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'button') return;
-    if (el.caseModal.classList.contains('open')) return;
+    if (locked()) return;
+    if ($('#view-coin').classList.contains('active')) {
+      e.preventDefault();
+      flipCoin();
+      return;
+    }
     if (!$('#view-play').classList.contains('active')) return;
     e.preventDefault();
     doUpgrade();
@@ -1394,9 +1979,18 @@ function bindEvents() {
   // синхронизация между вкладками
   window.addEventListener('storage', (e) => {
     if (e.key !== LS) return;
-    if (spinning || caseOpening) return;
+    if (spinning || caseOpening || coinBusy) return;
     const next = loadState();
-    if (next.pending) return; // не перехватываем незавершённый раунд из другой вкладки
+    if (next.pending) {
+      // В другой вкладке идёт раунд: блокируем действия и ждём его завершения.
+      state = next;
+      remoteBusy = true;
+      renderAll();
+      scheduleRemotePending();
+      return;
+    }
+    remoteBusy = false;
+    clearTimeout(remoteTimer);
     state = next;
     selected.clear();
     shownBalance = state.balance;
@@ -1419,11 +2013,21 @@ function init() {
 
   let settled = null;
   if (state.pending) {
-    settled = settlePending();
+    const mine = !state.pending.owner || state.pending.owner === TAB_ID;
+    const age = Date.now() - (Number(state.pending.ts) || 0);
+    if (mine || age > PENDING_LEASE) {
+      settled = settlePending();
+    } else {
+      // Раунд идёт в другой вкладке — не трогаем его.
+      remoteBusy = true;
+      scheduleRemotePending();
+    }
   }
 
   renderAll();
   refreshServerHash();
+  renderOnline();
+  setTimeout(onlineLoop, 4000);
   fakeFeedEvent();
   fakeFeedEvent();
   fakeFeedEvent();
@@ -1432,10 +2036,20 @@ function init() {
   if (settled) {
     setTimeout(() => {
       if (settled.mode === 'upgrade') {
+        const wonTarget = settled.targetId ? catalogById(settled.targetId) : null;
         toast(
           settled.win
-            ? 'Предыдущий апгрейд завершён: +' + fmt(settled.prize) + ' ◈'
+            ? (wonTarget
+                ? 'Предмет-цель получен: ' + wonTarget.name
+                : 'Предыдущий апгрейд завершён: +' + fmt(settled.prize) + ' ◈')
             : 'Предыдущий апгрейд завершён: −' + fmt(settled.stake) + ' ◈',
+          settled.win ? 'win' : 'lose'
+        );
+      } else if (settled.mode === 'coinflip') {
+        toast(
+          settled.win
+            ? 'Монетка завершена: +' + fmt(settled.prize) + ' ◈'
+            : 'Монетка завершена: −' + fmt(settled.stake) + ' ◈',
           settled.win ? 'win' : 'lose'
         );
       } else {
