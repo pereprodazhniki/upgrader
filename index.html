@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=6">
+<link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 
@@ -30,6 +30,7 @@
   <nav class="tabs" data-nav>
     <button class="tab active" data-view="play">Апгрейд</button>
     <button class="tab" data-view="cases">Кейсы</button>
+    <button class="tab" data-view="coin">Монетка</button>
     <button class="tab" data-view="shop">Магазин</button>
     <button class="tab" data-view="profile">Профиль</button>
   </nav>
@@ -115,7 +116,18 @@
           </div>
         </div>
 
+        <div class="mode-row" id="modeRow">
+          <button class="mode-btn active" data-mode="coins">◈ Монеты</button>
+          <button class="mode-btn" data-mode="item">🎯 Предмет</button>
+        </div>
+
         <div class="mult-row" id="multRow"></div>
+
+        <button class="target-pick" id="targetPick" hidden>
+          <span class="tp-emoji" id="targetEmoji">🎯</span>
+          <span class="tp-name" id="targetName">Выбрать предмет-цель</span>
+          <span class="tp-chance" id="targetChance">—</span>
+        </button>
 
         <div class="stake-summary">
           <span>Ставка <b id="stakeTotal">0</b> ◈</span>
@@ -130,7 +142,7 @@
       <aside class="panel side">
         <div class="panel-head">
           <h2>Live</h2>
-          <span class="live-dot" title="онлайн"></span>
+          <span class="online" id="online"><span class="live-dot" title="онлайн"></span><b>1 284</b></span>
         </div>
         <div class="feed" id="feed"></div>
 
@@ -162,6 +174,62 @@
       <p>Открывай кейсы и забирай скины в инвентарь</p>
     </div>
     <div class="case-grid" id="caseGrid"></div>
+  </section>
+
+  <!-- ================= МОНЕТКА ================= -->
+  <section class="view" id="view-coin">
+    <div class="page-head">
+      <h1>Монетка</h1>
+      <p>Орёл или решка — угадай сторону и удвой ставку</p>
+    </div>
+    <div class="coin-layout">
+      <div class="panel coin-panel">
+        <div class="coin-stage">
+          <div class="coin" id="coin">
+            <div class="coin-face front">О</div>
+            <div class="coin-face back">Р</div>
+          </div>
+        </div>
+
+        <div class="side-row" id="coinSides">
+          <button class="side-btn active" data-side="0"><span>О</span>Орёл</button>
+          <button class="side-btn" data-side="1"><span>Р</span>Решка</button>
+        </div>
+
+        <div class="bet-box">
+          <div class="bet-label">Ставка монетами</div>
+          <div class="bet-input">
+            <button id="coinMinus" class="step-btn" aria-label="Меньше">−</button>
+            <input id="coinAmount" type="number" min="0" step="50" value="100" inputmode="numeric" aria-label="Ставка в монетке">
+            <button id="coinPlus" class="step-btn" aria-label="Больше">+</button>
+          </div>
+          <div class="quick-bets" id="coinQuick">
+            <button data-bet="100">100</button>
+            <button data-bet="500">500</button>
+            <button data-bet="1000">1000</button>
+            <button data-bet="max">MAX</button>
+          </div>
+        </div>
+
+        <button id="flipBtn" class="upgrade-btn" disabled>КРУТИТЬ МОНЕТКУ</button>
+        <div class="arena-hint" id="coinHint">Шанс 47.5% · выплата ×2</div>
+      </div>
+
+      <aside class="panel coin-info">
+        <div class="panel-head"><h2>Как это работает</h2></div>
+        <ul class="rules">
+          <li>Выбери сторону: орёл или решка.</li>
+          <li>Поставь монеты и нажми «Крутить монетку».</li>
+          <li>Угадал — получаешь ×2 от ставки.</li>
+          <li>Шанс победы 47.5%, исход фиксируется до анимации.</li>
+          <li>Перезагрузка не меняет результат раунда.</li>
+        </ul>
+        <div class="coin-stat">
+          <span>Побед в монетке</span>
+          <b id="coinStats">0</b>
+        </div>
+      </aside>
+    </div>
   </section>
 
   <!-- ================= МАГАЗИН ================= -->
@@ -199,6 +267,20 @@
       <div class="stat"><span>Лучший выигрыш</span><b id="pBest">0 ◈</b></div>
     </div>
 
+    <div class="panel">
+      <div class="panel-head"><h2>Задания на сегодня</h2><span class="chip" id="questCount">0/3</span></div>
+      <div class="quest-list" id="dailyQuests"></div>
+    </div>
+
+    <div class="panel promo-panel">
+      <div class="panel-head"><h2>Промокод</h2><span class="muted">бонус к балансу</span></div>
+      <div class="promo-row">
+        <input id="promoInput" maxlength="20" placeholder="Введи промокод" autocomplete="off" spellcheck="false" aria-label="Промокод">
+        <button id="promoBtn" class="ghost">Активировать</button>
+      </div>
+      <p class="fair-note">Демо-коды: <b>UPGRADER</b>, <b>DEMO500</b>, <b>LUCKY777</b> — каждый можно использовать один раз.</p>
+    </div>
+
     <div class="panel chart-panel">
       <div class="panel-head"><h2>Динамика баланса</h2><span class="muted">последние транзакции</span></div>
       <canvas id="chart" height="180"></canvas>
@@ -207,6 +289,11 @@
     <div class="panel">
       <div class="panel-head"><h2>Достижения</h2><span class="chip" id="achCount">0/0</span></div>
       <div class="ach-grid" id="achievements"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Топ игроков</h2><span class="muted">по обороту</span></div>
+      <div class="board" id="leaderboard"></div>
     </div>
 
     <div class="panel">
@@ -225,6 +312,7 @@
 <nav class="bottom-nav" data-nav>
   <button class="active" data-view="play"><span>🎡</span>Апгрейд</button>
   <button data-view="cases"><span>📦</span>Кейсы</button>
+  <button data-view="coin"><span>🪙</span>Монетка</button>
   <button data-view="shop"><span>🛒</span>Магазин</button>
   <button data-view="profile"><span>👤</span>Профиль</button>
 </nav>
@@ -239,13 +327,26 @@
       <div class="reel" id="caseReel"></div>
     </div>
     <div class="case-result" id="caseResult"></div>
-    <button class="upgrade-btn" id="caseTake" disabled>Забрать</button>
+    <div class="case-actions">
+      <button class="ghost" id="caseAgain" disabled>Ещё раз</button>
+      <button class="upgrade-btn" id="caseTake" disabled>Забрать</button>
+    </div>
+  </div>
+</div>
+
+<!-- модалка выбора предмета-цели -->
+<div class="modal" id="targetModal" aria-hidden="true">
+  <div class="modal-card target-modal-card" role="dialog" aria-modal="true" aria-labelledby="targetTitle" tabindex="-1">
+    <button class="modal-close" id="targetClose" aria-label="Закрыть">✕</button>
+    <h3 id="targetTitle">Выбери предмет-цель</h3>
+    <p class="muted target-note">Шанс зависит от суммы ставки и цены предмета</p>
+    <div class="target-grid" id="targetGrid"></div>
   </div>
 </div>
 
 <canvas id="confetti" aria-hidden="true"></canvas>
 <div id="toast" class="toast" role="status"></div>
 
-<script src="app.js?v=6"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>
